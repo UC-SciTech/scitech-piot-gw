@@ -1,0 +1,187 @@
+---
+  # ansible based post installation configuration for the raspberry pi
+  # update and upgrade
+- name: Configure pi gateways
+  become: true
+  vars_files:
+    - "./env/env.yaml"
+  hosts:
+    - gateways
+  tasks:
+    - name: Disable auto updates
+      ansible.builtin.replace:
+        path: /etc/apt/apt.conf.d/20auto-upgrades
+        regexp: "APT::Periodic::Update-Package-Lists \"1\";"
+        replace: "APT::Periodic::Update-Package-Lists \"0\";"
+
+    - name: Disable auto upgrades
+      ansible.builtin.replace:
+        path: /etc/apt/apt.conf.d/20auto-upgrades
+        regexp: "APT::Periodic::Unattended-Upgrade \"1\";"
+        replace: "APT::Periodic::Unattended-Upgrade \"0\";"
+
+    - name: Update and upgrade
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: 'yes'
+
+    - name: Install build essential and git
+      ansible.builtin.apt:
+        name: "{{ packages }}"
+        update_cache: true
+        state: present
+      vars:
+        packages:
+          - "git"
+          - "build-essential"
+          - "python3-pip"
+
+    - name: Install docker
+      community.general.snap:
+        name: docker
+        state: present
+
+    - name: Install docker python
+      ansible.builtin.apt:
+        name: "{{ packages }}"
+        update_cache: true
+        state: present
+      vars:
+        packages:
+          - "python3-docker"
+
+    - name: Add static wlan ip netplan config
+      ansible.builtin.template:
+        src: ./templates/60-static-wifi.yaml
+        dest: /etc/netplan/60-static-wifi.yaml
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Enable uart in boot config
+      ansible.builtin.lineinfile:
+        path: /boot/firmware/config.txt
+        line: enable_uart=1
+        state: present
+
+    - name: Remove console from cmdline.txt
+      ansible.builtin.replace:
+        path: /boot/firmware/cmdline.txt
+        regexp: "console=serial0,115200"
+        replace: ""
+
+    - name: Disable serial console service
+      ansible.builtin.shell: |
+        systemctl stop serial-getty@ttyS0.service
+        systemctl disable serial-getty@ttyS0.service
+        systemctl mask serial-getty@ttyS0.service
+        exit 0
+      args:
+        executable: /bin/bash
+
+    - name: Disable bluetooth service
+      ansible.builtin.shell: |
+        systemctl disable hciuart
+        systemctl disable bluealsa
+        systemctl disable bluetooth
+        exit 0
+      args:
+        executable: /bin/bash
+
+    - name: Add udev rules file for serial
+      ansible.builtin.file:
+        path: /etc/udev/rules.d/10-serial-port.rules
+        state: touch
+        mode: u=rw,g=r,o=r
+
+    - name: Add udev rules from cmdline
+      ansible.builtin.blockinfile:
+        path: /etc/udev/rules.d/10-serial-port.rules
+        block: |
+          KERNEL=="ttyS0", SYMLINK+="serial0" GROUP="tty" MODE="0666"
+          KERNEL=="ttyAMA0", SYMLINK+="serial1" GROUP="tty" MODE="0666"
+        state: present
+
+    - name: Create a working directory if it does not exist
+      ansible.builtin.file:
+        path: /home/scitech/ws
+        state: directory
+        owner: scitech
+        group: scitech
+        mode: '0755'
+
+    - name: Clone source code
+      ansible.builtin.git:
+        repo: clone https://github.com/UC-SciTech/scitech-piot-gw.git
+        dest: /home/scitech/ws/scitech-piot-gw
+        clone: true
+        update: true
+
+    - name: Create .env file from the vars_files variables
+      ansible.builtin.template:
+        src: ./templates/.env.j2
+        dest: /home/scitech/ws/scitech-piot-gw/.env
+        owner: scitech
+        group: scitech
+        mode: '0644'
+
+    - name: Resolve hostapd template
+      ansible.builtin.template:
+        src: ./templates/hostapd.conf.j2
+        dest: /home/scitech/ws/scitech-piot-gw/env/hostapd.conf
+        owner: scitech
+        group: scitech
+        mode: '0644'
+
+    - name: Clone lora source github repository
+      ansible.builtin.git:
+        repo: clone https://github.com/Lora-net/sx1302_hal.git
+        dest: /home/scitech/ws/sx1302_hal
+        clone: true
+        update: true
+
+    - name: Install sx1302_hal
+      ansible.builtin.shell: |
+        make clean all
+        make all
+        cp tools/reset_lgw.sh util_chip_id/
+        cp tools/reset_lgw.sh packet_forwarder/
+        exit 0
+      args:
+        chdir: /home/scitech/ws/sx1302_hal
+
+    - name: Resolve packet forward config template
+      ansible.builtin.template:
+        src: ./templates/pkt_fwd_global_conf.json.j2
+        dest: /home/scitech/ws/sx1302_hal/packet_forwarder/lora_pkt_fwd/global_conf.json
+        owner: scitech
+        group: scitech
+        mode: '0644'
+
+    - name: Resolve packet forward service template
+      ansible.builtin.template:
+        src: ./templates/lora_pkt_fwd.service.j2
+        dest: /etc/systemd/system/lora_pkt_fwd.service
+        owner: root
+        group: root
+        mode: '0644'
+
+    # reboot when done
+    - name: Reboot gateways
+      ansible.builtin.reboot:
+        reboot_timeout: 3600
+
+    # run docker compose to start the services
+    - name: Run docker compose
+      community.docker.docker_compose:
+        project_src: /home/scitech/ws/scitech-piot-gw
+        state: present
+
+    - name: Start packet forwarder service
+      ansible.builtin.shell: |
+        systemctl daemon-reload
+        systemctl enable lora_pkt_fwd.service
+        systemctl start lora_pkt_fwd.service
+        exit 0
+      args:
+        executable: /bin/bash

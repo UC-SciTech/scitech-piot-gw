@@ -1,0 +1,17 @@
+# ansible inventory file
+
+hosts:
+  # change to the correct id (00x)
+  - name: piot-gw-001
+    ip: 127.0.0.1 # this can be used to run on the pi locally
+    # ip: 192.168.1.4 # room for other services on wider network
+
+  # add if completing multiple gateways
+  # - name: piot-gw-002
+  #   ip: 192.168.1.5
+
+children:
+  gateways:
+    hosts:
+      piot-gw-001:
+      # piot-gw-002:
