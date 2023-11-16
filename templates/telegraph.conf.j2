@@ -1,0 +1,14 @@
+# influx output
+[[outputs.influxdb_v2]]
+urls = ["http://influxdb:8086"]
+token = "{{INFLUX_API_TOKEN}}"
+organization = "scitech"
+bucket = "piot-gw"
+
+# mqtt input
+[[inputs.mqtt_consumer]]
+servers = ["tcp://emqx:1883"]
+
+topics = [
+    "sensors/#",
+  ]

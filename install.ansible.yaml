@@ -31,10 +31,10 @@
         regexp: "APT::Periodic::Unattended-Upgrade \"1\";"
         replace: "APT::Periodic::Unattended-Upgrade \"0\";"
 
-    - name: Update and upgrade
-      ansible.builtin.apt:
-        update_cache: true
-        upgrade: 'yes'
+    # - name: Update and upgrade
+    #   ansible.builtin.apt:
+    #     update_cache: true
+    #     upgrade: 'yes'
 
     - name: Install mDNS
       ansible.builtin.apt:
@@ -181,7 +181,23 @@
     - name: Resolve hostapd template
       ansible.builtin.template:
         src: templates/hostapd.conf.j2
-        dest: /home/scitech/ws/scitech-piot-gw/env/hostapd.conf
+        dest: /home/scitech/ws/scitech-piot-gw/env/hostapd/hostapd.conf
+        owner: scitech
+        group: scitech
+        mode: '0644'
+
+    - name: Resolve telegraf config template
+      ansible.builtin.template:
+        src: templates/telegraf.conf.j2
+        dest: /home/scitech/ws/scitech-piot-gw/env/telegraf/telegraf.conf
+        owner: scitech
+        group: scitech
+        mode: '0644'
+
+    - name: Template emqx config
+      ansible.builtin.template:
+        src: templates/emqx.conf.j2
+        dest: /home/scitech/ws/scitech-piot-gw/env/emqx/emqx.conf
         owner: scitech
         group: scitech
         mode: '0644'

@@ -1,0 +1,21 @@
+## Basic configuration of EMQ X Broker
+
+## Node name
+node.name = emqx@127.0.0.1
+
+## Default listener
+listener.tcp.default = 0.0.0.0:1883
+
+## System limit
+## Max number of allowed concurrent connections
+zone.external.max_conn = 1000000
+
+## MQTT Protocol
+mqtt.max_packet_size = 64KB
+
+## Log level
+log.level = error
+
+## Authentication
+## Allow anonymous authentication by default
+allow_anonymous = true
