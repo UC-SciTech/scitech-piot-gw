@@ -36,7 +36,7 @@ sudo apt install sshpass
 
 # use the ask pass option in ansible commands
 
-ansible controllers --ask-pass -m ping
+ansible gateways --ask-pass -m ping
 ```
 
 ## Installation
@@ -62,6 +62,9 @@ cp env.example.yaml env/env.yaml
 # Run ansible setup playbook
 
 ansible-playbook -k -K install.ansible.yaml
+
+# start services
+ansible-playbook -k -K start.ansible.yaml
 ```
 
 ```bash

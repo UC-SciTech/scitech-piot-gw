@@ -1,0 +1,20 @@
+---
+# start the gateway services
+- name: Start gateway services
+  become: true
+  vars_files:
+    - "./env/env.yaml"
+  hosts:
+    - gateways
+  tasks:
+    # run docker compose to start the services
+    - name: Run docker compose
+      community.docker.docker_compose:
+        project_src: /home/scitech/ws/scitech-piot-gw
+        state: present
+
+    # - name: Start packet forwarder service
+    #   ansible.builtin.systemd_service:
+    #     name: lora_pkt_fwd.service
+    #     state: started
+    #     enabled: true
