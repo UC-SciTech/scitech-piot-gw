@@ -2,6 +2,19 @@ version: "3"
 
 # sub-systems in containers
 services:
+  # nginx proxy manager (npm)
+  # npm:
+  #   image: jwilder/nginx-proxy
+  #   container_name: npm
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./env/npm/certs:/etc/nginx/certs:ro
+  #     - ./env/npm/vhost.d:/etc/nginx/vhost.d
+  #     - ./env/npm/conf.d:/etc/nginx/conf.d
+  #     - /var/run/docker.sock:/tmp/docker.sock:ro
+
   # hostapd
   # https://github.com/J-Siu/docker_hostapd/tree/master
   # hostapd:
@@ -21,6 +34,11 @@ services:
     container_name: pihole
     image: pihole/pihole:latest
     network_mode: "host"
+    # ports:
+    #   - "53:53/tcp"
+    #   - "53:53/udp"
+    #   - "67:67/udp" # Only required if you are using Pi-hole as your DHCP server
+    #   - "8080:80/tcp"
     environment:
       TZ: 'Australia/Sydney'
       WEBPASSWORD: '${PIHOLE_WEBPASSWORD}'
@@ -34,7 +52,7 @@ services:
       - NET_ADMIN # Required if you are using Pi-hole as your DHCP server, else not needed
     restart: unless-stopped
 
-  # basicstation
+  # basicstation LoRa gateway
   # https://github.com/xoseperez/basicstation/tree/master
   basicstation:
     image: xoseperez/basicstation:latest
@@ -69,12 +87,12 @@ services:
       - '8084:8084' # for MQTT over Websocket/SSL
       - '18083:18083' # for the dashboard
     volumes:
-      - './env/emqx/etc:/opt/emqx/etc'
+      # - './env/emqx/etc:/opt/emqx/etc'
       - './env/emqx/data:/opt/emqx/data'
-      - './env/emqx/log:/opt/emqx/log'
+      # - './env/emqx/log:/opt/emqx/log'
     restart: unless-stopped
 
-  # InfluxDB
+  # InfluxDB time series database from the TICK stack
   influxdb:
     container_name: influxdb
     image: influxdb:latest
@@ -84,7 +102,7 @@ services:
       - './env/influxdb:/var/lib/influxdb'
     restart: unless-stopped
 
-  # telegraf
+  # telegraf collector for influxdb
   telegraf:
     container_name: telegraf
     image: telegraf:latest
@@ -92,7 +110,7 @@ services:
       - './env/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro'
     restart: unless-stopped
 
-  # home-assistant
+  # home-assistant home automation platform
   # https://docs.linuxserver.io/images/docker-homeassistant/
   homeassistant:
     image: lscr.io/linuxserver/homeassistant:latest
@@ -107,7 +125,7 @@ services:
       - ./env/homeassistant:/config
     restart: unless-stopped
 
-  # Node-RED
+  # Node-RED nodejs based block editor automation framework
   # https://nodered.org/docs/
   nodered:
     container_name: nodered
@@ -124,30 +142,43 @@ services:
       - './env/nodered:/data'
     restart: unless-stopped
 
-  # heimdall to keep track of all the services
-  heimdall:
-    container_name: heimdall
-    image: lscr.io/linuxserver/heimdall:latest
+  # heimdall homepage to keep track of all the services
+  # heimdall:
+  #   container_name: heimdall
+  #   image: lscr.io/linuxserver/heimdall:latest
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=Sydney/Australia
+  #   ports:
+  #     # - '8080:80'
+  #     - '8443:443'
+  #   volumes:
+  #     - './env/heimdall:/config'
+  #   restart: unless-stopped
+
+  # homer homepage to keep track of all the services
+  homer:
+    container_name: homer
+    image: b4bz/homer:latest
+    user: '1000:1000'
     environment:
-      - PUID=1000
-      - PGID=1000
       - TZ=Sydney/Australia
     ports:
-      # - '8080:80'
-      - '443:443'
+      - '8080:8080'
     volumes:
-      - './env/heimdall:/config'
+      - './env/homer/assets:/www/assets'
     restart: unless-stopped
 
   # portainer to manage docker containers
   portainer:
-    image: portainer/portainer-ce
+    image: portainer/portainer-ce:latest
     container_name: portainer
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
     ports:
-      - 9000:9000
+      - 9443:9443
     restart: unless-stopped
 
 volumes:

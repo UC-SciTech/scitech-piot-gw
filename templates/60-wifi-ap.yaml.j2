@@ -1,0 +1,19 @@
+# static wifi address
+network:
+    version: 2
+    renderer: NetworkManager
+    ethernets:
+        eth0:
+            dhcp4: true
+            optional: true
+    wifis:
+        wlan0:
+            dhcp4: false
+            optional: true
+            addresses: [{{ AP_IP_ADDRESS }}/24]
+            nameservers:
+                addresses: [127.0.0.1, 1.1.1.1, 8.8.8.8]
+            access-points:
+                "{{ AP_SSID }}":
+                    mode: ap
+                    password: "{{ AP_PASSPHRASE }}"

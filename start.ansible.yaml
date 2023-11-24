@@ -7,100 +7,11 @@
   hosts:
     - gateways
   tasks:
-    # make sure all the mount points exist if not create them
-    - name: Create env/hostapd folder
-      ansible.builtin.file:
-        path: /home/scitech/ws/scitech-piot-gw/env/hostapd
-        state: directory
-        owner: scitech
-        group: scitech
-        mode: '0755'
-
-    - name: Create env/pihole/pihole folder
-      ansible.builtin.file:
-        path: /home/scitech/ws/scitech-piot-gw/env/pihole/pihole
-        state: directory
-        owner: scitech
-        group: scitech
-        mode: '0755'
-
-    - name: Create env/etc/dnsmasq.d folder
-      ansible.builtin.file:
-        path: /home/scitech/ws/scitech-piot-gw/env/pihole/dnsmasq.d
-        state: directory
-        owner: scitech
-        group: scitech
-        mode: '0755'
-
-    - name: Create env/emqx/etc folder
-      ansible.builtin.file:
-        path: /home/scitech/ws/scitech-piot-gw/env/emqx/etc
-        state: directory
-        owner: scitech
-        group: scitech
-        mode: '0755'
-
-    - name: Create env/emqx/data folder
-      ansible.builtin.file:
-        path: /home/scitech/ws/scitech-piot-gw/env/emqx/data
-        state: directory
-        owner: scitech
-        group: scitech
-        mode: '0755'
-
-    - name: Create env/emqx/log folder
-      ansible.builtin.file:
-        path: /home/scitech/ws/scitech-piot-gw/env/emqx/log
-        state: directory
-        owner: scitech
-        group: scitech
-        mode: '0755'
-
-    - name: Create env/influxdb folder
-      ansible.builtin.file:
-        path: /home/scitech/ws/scitech-piot-gw/env/influxdb
-        state: directory
-        owner: scitech
-        group: scitech
-        mode: '0755'
-
-    - name: Create env/telegraf folder
-      ansible.builtin.file:
-        path: /home/scitech/ws/scitech-piot-gw/env/telegraf
-        state: directory
-        owner: scitech
-        group: scitech
-        mode: '0755'
-
-    - name: Create env/homeassistant folder
-      ansible.builtin.file:
-        path: /home/scitech/ws/scitech-piot-gw/env/homeassistant
-        state: directory
-        owner: scitech
-        group: scitech
-        mode: '0755'
-
-    - name: Create env/nodered folder
-      ansible.builtin.file:
-        path: /home/scitech/ws/scitech-piot-gw/env/nodered
-        state: directory
-        owner: scitech
-        group: scitech
-        mode: '0755'
-
-    - name: Create env/heimdall folder
-      ansible.builtin.file:
-        path: /home/scitech/ws/scitech-piot-gw/env/heimdall
-        state: directory
-        owner: scitech
-        group: scitech
-        mode: '0755'
-
     # run docker compose to start the services
-    # - name: Run docker compose
-    #   community.docker.docker_compose:
-    #     project_src: /home/scitech/ws/scitech-piot-gw
-    #     state: present
+    - name: Run docker compose
+      community.docker.docker_compose:
+        project_src: /home/scitech/ws/scitech-piot-gw
+        state: present
 
     # - name: Start packet forwarder service
     #   ansible.builtin.systemd_service:
