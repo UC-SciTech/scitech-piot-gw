@@ -324,6 +324,14 @@
         group: scitech
         mode: '0644'
 
+    - name: Resolve homer config template
+      ansible.builtin.template:
+        src: templates/config.yml.homer.j2
+        dest: /home/scitech/ws/scitech-piot-gw/env/homer/assets/config.yml
+        owner: scitech
+        group: scitech
+        mode: '0644'
+
     - name: Clone lora source github repository
       ansible.builtin.git:
         repo: https://github.com/Lora-net/sx1302_hal.git

@@ -1,20 +1,21 @@
-## Basic configuration of EMQ X Broker
+node {
+  name = "emqx@127.0.0.1"
+  cookie = "emqxsecretcookie"
+  data_dir = "data"
+}
 
-## Node name
-node.name = emqx@127.0.0.1
+cluster {
+  name = emqxcl
+  discovery_strategy = manual
+}
 
-## Default listener
-listener.tcp.default = 0.0.0.0:1883
-
-## System limit
-## Max number of allowed concurrent connections
-zone.external.max_conn = 1000000
-
-## MQTT Protocol
-mqtt.max_packet_size = 64KB
-
-## Log level
-log.level = error
+dashboard {
+    default_username = {{EMQX_ADMIN_USERNAME}}
+    default_password = {{EMQX_ADMIN_PASSWORD}}
+    listeners.http {
+        bind = 18083
+    }
+}
 
 ## Authentication
 ## Allow anonymous authentication by default

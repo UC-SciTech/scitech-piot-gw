@@ -1,0 +1,48 @@
+title: "PIOT Gateway Dashboard"
+subtitle: "Pi IoT Gateway Dashboard for onboard services"
+
+logo: "assets/logo.png"
+
+header: true
+footer: '<p>Created with <span class="has-text-danger">❤️</span> with <a href="https://bulma.io/">bulma</a>, <a href="https://vuejs.org/">vuejs</a> & <a href="https://fontawesome.com/">font awesome</a> // Fork me on <a href="https://github.com/bastienwirtz/homer"><i class="fab fa-github-alt"></i></a></p>'
+
+links:
+  - name: "Github"
+    icon: "fab fa-github"
+    url: "https://github.com/UC-SciTech/scitech-piot-gw"
+    target: "_blank"
+
+services:
+  - name: "Services"
+    icon: "fas fa-code-branch"
+    items:
+      - name: "Pi Hole"
+        icon: "fas fa-code-branch"
+        url: "http://{{GW_HOST}}/admin"
+        target: "_blank"
+        subtitle: "DHCP & DNS"
+      - name: "MQTT Dashboard"
+        icon: "fas fa-code-branch"
+        url: "http://{{GW_HOST}}:18083"
+        target: "_blank"
+        subtitle: "EMQX MQTT broker dashboard"
+      - name: "Node Red"
+        icon: "fas fa-code-branch"
+        url: "http://{{GW_HOST}}:1880"
+        target: "_blank"
+        subtitle: "node.js flow based programming for IoT"
+      - name: "Influxdb"
+        icon: "fas fa-code-branch"
+        url: "http://{{GW_HOST}}:8086"
+        target: "_blank"
+        subtitle: "Time series database dashboard"
+      - name: "Home Assistant"
+        icon: "fas fa-code-branch"
+        url: "http://{{GW_HOST}}:8123"
+        target: "_blank"
+        subtitle: "Home automation dashboard"
+      - name: "Portainer"
+        icon: "fas fa-code-branch"
+        url: "https://{{GW_HOST}}:9443"
+        target: "_blank"
+        subtitle: "Docker container management"

@@ -8,6 +8,9 @@ Raspberry Pi based IoT gateway with Waveshare SX130x 868M/915M LoRaWAN Gateway M
 1. 16GB microSD card
 1. USB-C power supply 3A
 1. Waveshare SX130x 868M/915M LoRaWAN Gateway Module [bought here](<https://www.waveshare.com/product/iot-communication/long-range-wireless/nb-iot-lora/sx1302-868m-lorawan-gateway-b.htm>)
+1. XBee pro 900HP 250mW RPSMA [bought here](<https://www.digikey.com/en/products/detail/digi/XBP9B-XCST-001/4974970>)
+1. 915MHz 3dBi RP-SMA Antenna [bought here](<https://www.digikey.com/en/products/detail/laird-connectivity-inc/ANT-916-CW-RCS/1057770>)
+1. XBee USB Adapter [bought here](<https://www.digikey.com/en/products/detail/digi/XBIB-U-DEV/4974971>)
 
 ## Waveshare SX130x 868M/915M LoRaWAN Gateway Module Documentation
 
@@ -15,17 +18,16 @@ The Waveshare product wiki can be found [here](<https://www.waveshare.com/wiki/S
 
 ## Software
 
-1. ubuntu server 22.04 LTS 64bit (arm64)
-1. docker
-1. docker-compose
-1. ansible (for setup)
-1. hostapd access point
+1. ubuntu server 22.04 LTS 64bit (arm64) - OS for the gateway
+1. docker & docker-compose - to run main network services
+1. ansible (for setup) - to install and configure the gateway remotely
 1. pi-hole ad blocker and DHCP server
-1. mosquitto mqtt broker
-1. lora-gateway-bridge
-1. chirpstack-network-server
-1. chirpstack-application-server
-1. chirpstack-gateway-bridge
+1. emqx mqtt broker
+1. influxdb & telegraph - time series database and ingress from mqtt
+1. homeassistant - home automation platform
+1. node-red - flow based programming for IoT automation
+1. basicstation - lora-gateway-bridge
+1. homer - dashboard for services
 
 ## Password SSH
 
