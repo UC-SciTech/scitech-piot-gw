@@ -87,7 +87,7 @@ services:
       - '8084:8084' # for MQTT over Websocket/SSL
       - '18083:18083' # for the dashboard
     volumes:
-      - './env/emqx/etc:/opt/emqx/etc'
+      - './env/emqx/etc/emqx.conf:/opt/emqx/etc/emqx.conf'
       - './env/emqx/data:/opt/emqx/data'
       # - './env/emqx/log:/opt/emqx/log'
     restart: unless-stopped
@@ -115,6 +115,9 @@ services:
     image: telegraf:latest
     volumes:
       - './env/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro'
+    depends_on:
+      - influxdb
+      - emqx
     restart: unless-stopped
 
   # home-assistant home automation platform
@@ -174,7 +177,7 @@ services:
     ports:
       - '8080:8080'
     volumes:
-      - './env/homer/assets:/www/assets'
+      - './env/homer/assets/config.yml:/www/assets/config.yml'
     restart: unless-stopped
 
   # portainer to manage docker containers

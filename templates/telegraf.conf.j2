@@ -1,9 +1,9 @@
 # influx output
 [[outputs.influxdb_v2]]
 urls = ["http://influxdb:8086"]
-token = "{{DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}}"
-organization = "{{DOCKER_INFLUXDB_INIT_ORG}}"
-bucket = "{{DOCKER_INFLUXDB_INIT_BUCKET}}"
+token = "{{INFLUXDB_ADMIN_TOKEN}}"
+organization = "{{INFLUXDB_ORG}}"
+bucket = "{{INFLUXDB_BUCKET}}"
 
 # mqtt input
 [[inputs.mqtt_consumer]]
@@ -11,4 +11,16 @@ servers = ["tcp://emqx:1883"]
 
 topics = [
     "sensors/#",
+    "actuators/#"
   ]
+
+data_format = "json_v2"
+
+# json_v2
+[[inputs.mqtt_consumer.json_v2]]
+  [[inputs.mqtt_consumer.json_v2.object]]
+    timestamp_path = "time"
+    timestamp_format = "unix_ms"
+    [[inputs.mqtt_consumer.json_v2.object]]
+        path = "measurements"
+        tags = ["name", "units"]

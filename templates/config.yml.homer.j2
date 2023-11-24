@@ -1,10 +1,15 @@
 title: "PIOT Gateway Dashboard"
 subtitle: "Pi IoT Gateway Dashboard for onboard services"
 
-logo: "assets/logo.png"
+logo: "logo.png"
 
 header: true
 footer: '<p>Created with <span class="has-text-danger">❤️</span> with <a href="https://bulma.io/">bulma</a>, <a href="https://vuejs.org/">vuejs</a> & <a href="https://fontawesome.com/">font awesome</a> // Fork me on <a href="https://github.com/bastienwirtz/homer"><i class="fab fa-github-alt"></i></a></p>'
+
+message:
+  style: "is-dark"
+  title: "👋 Welcome !"
+  content: "This page shows an overview of the onboard services. Feel free to click anywhere!<br /> Find more information about homer <a href='https://github.com/bastienwirtz/homer'>github.com/bastienwirtz/homer</a>"
 
 links:
   - name: "Github"
@@ -14,10 +19,10 @@ links:
 
 services:
   - name: "Services"
-    icon: "fas fa-code-branch"
+    icon: "fas fa-cloud"
     items:
       - name: "Pi Hole"
-        icon: "fas fa-code-branch"
+        logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/pihole.png"
         url: "http://{{GW_HOST}}/admin"
         target: "_blank"
         subtitle: "DHCP & DNS"
