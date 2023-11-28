@@ -10,8 +10,9 @@ COPY iptables.sh /iptables.sh
 COPY iptables_off.sh /iptables_off.sh
 
 # entrypoint script
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY entrypoint.sh /bin/hostapd-entrypoint.sh
+RUN chmod +x /bin/hostapd-entrypoint.sh
 
-ENTRYPOINT [ "entrypoint.sh" ]
+ENTRYPOINT [ "/bin/hostapd-entrypoint.sh" ]
 
 CMD ["hostapd","/hostapd.conf"]
