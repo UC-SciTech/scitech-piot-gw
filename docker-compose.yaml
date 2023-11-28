@@ -27,6 +27,8 @@ services:
     cap_add:
       - NET_ADMIN
     privileged: true
+    environment:
+      AP_IP_ADDRESS: '${AP_IP_ADDRESS}'
     volumes:
       - ./env/hostapd/hostapd.conf:/hostapd.conf:ro
       - ./env/hostapd/interfaces.hostapd:/etc/network/interfaces:ro

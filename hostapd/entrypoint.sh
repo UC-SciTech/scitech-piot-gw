@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # entrypoint script for hostapd docker container
 # This script is called by the hostapd service when it starts up using the docker entrypoint system
 # It is used to bring up the wlan0 interface and set the IP address
@@ -32,10 +32,15 @@ echo -e "${CYAN}[*] Creating iptables rules${NOCOLOR}"
 sh /iptables.sh || echo -e "${RED}[-] Error creating iptables rules${NOCOLOR}"
 
 echo -e "${CYAN}[*] Setting wlan0 settings${NOCOLOR}"
-ifdown wlan0
-ifup wlan0
+# ifdown wlan0
+# ifup wlan0
+ip link set wlan0 up
+ip addr flush dev wlan0
+ip addr add ${AP_IP_ADDRESS}/24 dev wlan0
 
 echo -e "${CYAN}[+] Configuration successful! Services will start now${NOCOLOR}"
 
 # release to script to the command script
 exec "$@"
+
+cleanup
