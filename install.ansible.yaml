@@ -136,7 +136,7 @@
         dest: /etc/netplan/60-wifi-ap.yaml
         owner: root
         group: root
-        mode: '0644'
+        mode: '0600'
 
     - name: Enable uart in boot config
       ansible.builtin.lineinfile:

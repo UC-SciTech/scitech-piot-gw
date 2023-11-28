@@ -28,6 +28,9 @@ cleanup () {
 }
 
 trap 'sigterm_handler' TERM INT
+echo -e "${CYAN}[*] Setting wifi region to AU${NOCOLOR}"
+iw --debug reg set AU
+
 echo -e "${CYAN}[*] Creating iptables rules${NOCOLOR}"
 sh /iptables.sh || echo -e "${RED}[-] Error creating iptables rules${NOCOLOR}"
 
@@ -43,4 +46,8 @@ echo -e "${CYAN}[+] Configuration successful! Services will start now${NOCOLOR}"
 # release to script to the command script
 exec "$@"
 
+# wait for the command script to finish
+wait $!
+
+# cleanup
 cleanup
