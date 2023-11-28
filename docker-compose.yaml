@@ -23,7 +23,6 @@ services:
     build:
       context: ./hostapd
       dockerfile: hostapd.dockerfile
-    command: ["/bin/sh", "sleep 60 && /usr/sbin/hostapd -B /hostapd.conf"]
     network_mode: "host"
     cap_add:
       - NET_ADMIN
