@@ -21,15 +21,34 @@ The Waveshare product wiki can be found [here](<https://www.waveshare.com/wiki/S
 1. ubuntu server 22.04 LTS 64bit (arm64) - OS for the gateway
 1. docker & docker-compose - to run main network services
 1. ansible (for setup) - to install and configure the gateway remotely
+
+### Services
+
 1. pi-hole ad blocker and DHCP server
-1. emqx mqtt broker
+1. emqx - mqtt broker
 1. influxdb & telegraph - time series database and ingress from mqtt
 1. homeassistant - home automation platform
 1. node-red - flow based programming for IoT automation
-1. basicstation - lora-gateway-bridge
-1. homer - dashboard for services
+1. basicstation - lora-gateway-bridge connected to [the things network](<https://www.thethingsnetwork.org/>)
+1. homer - dashboard / landing page for all the services
+
+## Set up
+
+The pi needs an OS image installed on the microSD card. The image is installed on the microSD card using the [Raspberry Pi Imager](<https://www.raspberrypi.org/software/>). The OS image can be selected from the menu. It is a good idea to set up ssh and a default user when flashing the image. This can be done using the settings menu in the imager.
+
+Make sure the use the ubuntu server 22.04 LTS 64bit (arm64) image. This is the only image that will work with the ansible playbooks provided (probably).
+
+Once the image is flashed, the microSD card can be inserted into the pi and the pi can be powered on. The pi will boot and the OS will be installed. Once the OS is installed, the pi will reboot and the OS will be ready to use. Power cycle the pi to make sure that it boots up correctly after the installation.
+
+The rest of the setup can be done remotely using ansible.
+
+## The Things Network
+
+The gateway is configured to connect to [the things network](<https://www.thethingsnetwork.org/>) using a service called basicstation. The gateway will need to be registered with the things network. The gateway ID and key will need to be added to the `environment` files.
 
 ## Password SSH
+
+Ansible remote ssh password requires sshpass to be installed on the local machine.
 
 ```bash
 # install sshpass
@@ -43,6 +62,8 @@ ansible gateways --ask-pass -m ping
 
 ## Installation
 
+Once the code is downloaded, create a virtual python environment and install the requirements. This will install ansible tools and the python libraries required to run the ansible playbooks.
+
 ```bash
 #Install a virtual python environment (make sure that python3 venv is installed)
 
@@ -52,6 +73,8 @@ source .venv/bin/activate
 
 pip install -r requirements.txt
 ```
+
+Create some secrets for the gateway. This will create a `env/env.yaml` file in the project. This file is used by the ansible playbooks to configure the gateway.
 
 ```bash
 # create a env/env.yaml file from the example
@@ -69,17 +92,22 @@ ansible-playbook -k -K install.ansible.yaml
 ansible-playbook -k -K start.ansible.yaml
 ```
 
+Log in to the to verify the installation.
+
 ```bash
 # login to the gateway
 
 ssh scitech@piot-gw-001 # replace 001 with the number of your gateway
 ```
 
+To test the containerized services, log in to the gateway and run the docker compose file (without the `-d` option).
+
 ```bash
 # run the docker compose file
 
 cd /home/scitech/ws/scitech-piot-gw
 
+# start and detach services
 docker-compose up -d
 ```
 
@@ -102,9 +130,13 @@ The password is configured in the `.env` when created.
 
 Go to: <http://piot-gw-001:18083> (change 001 to the number of your gateway)
 
+The password is configured in the `.env` when created.
+
 ### influxdb
 
 Go to: <http://piot-gw-001:8086> (change 001 to the number of your gateway)
+
+The password is configured in the `.env` when created.
 
 ### home assistant
 
@@ -114,6 +146,16 @@ Go to: <http://piot-gw-001:8123> (change 001 to the number of your gateway)
 
 Go to: <http://piot-gw-001:1880> (change 001 to the number of your gateway)
 
-### heimdall
+This is not password protected.
 
-Go to: <https://piot-gw-001:8443> (change 001 to the number of your gateway)
+### homer
+
+Go to: <http://piot-gw-001:8080> (change 001 to the number of your gateway)
+
+This is not password protected.
+
+### portainer
+
+Go to: <https://piot-gw-001:9443> (change 001 to the number of your gateway)
+
+This service will need to be configured with a username and password when it is first run.

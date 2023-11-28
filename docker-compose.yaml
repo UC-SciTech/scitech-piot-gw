@@ -17,16 +17,16 @@ services:
 
   # hostapd
   # https://github.com/J-Siu/docker_hostapd/tree/master
-  # hostapd:
-  #   container_name: hostapd
-  #   build:
-  #     context: ./
-  #     dockerfile: hostapd.dockerfile
-  #   network_mode: "host"
-  #   privileged: true
-  #   volumes:
-  #     - ./env/hostapd/hostapd.conf:/hostapd.conf:ro
-  #   restart: unless-stopped
+  hostapd:
+    container_name: hostapd
+    build:
+      context: ./
+      dockerfile: hostapd.dockerfile
+    network_mode: "host"
+    privileged: true
+    volumes:
+      - ./env/hostapd/hostapd.conf:/hostapd.conf:ro
+    restart: unless-stopped
 
   # pihole
   # More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
@@ -43,6 +43,7 @@ services:
       TZ: 'Australia/Sydney'
       WEBPASSWORD: '${PIHOLE_WEBPASSWORD}'
       INTERFACE: 'wlan0'
+      WEB_PORT: '8080' # moved from 80 to avoid conflict with homer
     # Volumes store your data between container upgrades
     volumes:
       - './env/pihole/pihole:/etc/pihole'
@@ -175,7 +176,7 @@ services:
     environment:
       - TZ=Sydney/Australia
     ports:
-      - '8080:8080'
+      - '80:8080'
     volumes:
       - './env/homer/assets/config.yml:/www/assets/config.yml'
     restart: unless-stopped

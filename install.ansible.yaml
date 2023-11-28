@@ -31,28 +31,25 @@
         regexp: "APT::Periodic::Unattended-Upgrade \"1\";"
         replace: "APT::Periodic::Unattended-Upgrade \"0\";"
 
-    - name: Stop systemd-resolved service
-      ansible.builtin.systemd_service:
-        name: systemd-resolved
-        state: stopped
-        enabled: false
-        masked: true
+    # fix for pihole dns listener (does help)
+    - name: Disable systemd-resolved service listener
+      ansible.builtin.replace:
+        path: /etc/systemd/resolved.conf
+        regexp: "#DNSStubListener=yes"
+        replace: "DNSStubListener=no"
 
+    # sudo sh -c 'rm /etc/resolv.conf && ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf'
+    # replace resolv.conf with symlink to systemd-resolved
     - name: Remove symlink to resolv.conf
       ansible.builtin.file:
         path: /etc/resolv.conf
         state: absent
 
-    - name: Create new resolv.conf
-      ansible.builtin.copy:
+    - name: Create symlink to systemd-resolved
+      ansible.builtin.file:
+        src: /run/systemd/resolve/resolv.conf
         dest: /etc/resolv.conf
-        content: |
-          nameserver 1.1.1.1
-          nameserver 8.8.8.8
-          nameserver 127.0.0.1
-        owner: root
-        group: root
-        mode: '0644'
+        state: link
 
     - name: Update and upgrade
       ansible.builtin.apt:
@@ -212,13 +209,13 @@
         mode: '0755'
 
     # make sure all the mount points exist if not create them
-    # - name: Create env/hostapd folder
-    #   ansible.builtin.file:
-    #     path: /home/scitech/ws/scitech-piot-gw/env/hostapd
-    #     state: directory
-    #     owner: scitech
-    #     group: scitech
-    #     mode: '0755'
+    - name: Create env/hostapd folder
+      ansible.builtin.file:
+        path: /home/scitech/ws/scitech-piot-gw/env/hostapd
+        state: directory
+        owner: scitech
+        group: scitech
+        mode: '0755'
 
     - name: Create env/pihole/pihole folder
       ansible.builtin.file:
@@ -300,13 +297,13 @@
         group: scitech
         mode: '0644'
 
-    # - name: Resolve hostapd template
-    #   ansible.builtin.template:
-    #     src: templates/hostapd.conf.j2
-    #     dest: /home/scitech/ws/scitech-piot-gw/env/hostapd/hostapd.conf
-    #     owner: scitech
-    #     group: scitech
-    #     mode: '0644'
+    - name: Resolve hostapd template
+      ansible.builtin.template:
+        src: templates/hostapd.conf.j2
+        dest: /home/scitech/ws/scitech-piot-gw/env/hostapd/hostapd.conf
+        owner: scitech
+        group: scitech
+        mode: '0644'
 
     - name: Resolve telegraf config template
       ansible.builtin.template:

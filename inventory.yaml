@@ -8,11 +8,12 @@ all:
       # ansible_host: 192.168.1.4 # room for other services on wider network
 
     # add if completing multiple gateways
-    # piot-gw-002:
-    #   ansible_host: 192.168.1.5 # room for other services on wider network
+    piot-gw-002:
+      ansible_host: piot-gw-002 #.local # this is the hostname of the pi
+      # ansible_host: 192.168.1.5 # room for other services on wider network
 
   children:
     gateways:
       hosts:
-        piot-gw-001:
-        # piot-gw-002:
+        # piot-gw-001:
+        piot-gw-002:
