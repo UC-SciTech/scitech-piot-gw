@@ -305,6 +305,14 @@
         group: scitech
         mode: '0644'
 
+    - name: Resolve hostapd interface template
+      ansible.builtin.template:
+        src: templates/interfaces.hostapd.j2
+        dest: /home/scitech/ws/scitech-piot-gw/env/hostapd/interfaces.hostapd
+        owner: scitech
+        group: scitech
+        mode: '0644'
+
     - name: Resolve telegraf config template
       ansible.builtin.template:
         src: templates/telegraf.conf.j2

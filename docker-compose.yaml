@@ -17,15 +17,19 @@ services:
 
   # hostapd
   # https://github.com/J-Siu/docker_hostapd/tree/master
+  # https://gitlab.com/hartek/autowlan
   hostapd:
     container_name: hostapd
     build:
-      context: ./
+      context: ./hostapd
       dockerfile: hostapd.dockerfile
     network_mode: "host"
+    cap_add:
+      - NET_ADMIN
     privileged: true
     volumes:
       - ./env/hostapd/hostapd.conf:/hostapd.conf:ro
+      - ./env/hostapd/interfaces.hostapd:/etc/network/interfaces:ro
     restart: unless-stopped
 
   # pihole
