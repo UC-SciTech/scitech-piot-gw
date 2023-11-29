@@ -70,7 +70,7 @@
       vars:
         packages:
           - "avahi-daemon"
-          - "network-manager"
+          # - "network-manager"
 
     - name: Install build essential and git
       ansible.builtin.apt:
@@ -188,6 +188,12 @@
           KERNEL=="ttyS0", SYMLINK+="serial0" GROUP="tty" MODE="0666"
           KERNEL=="ttyAMA0", SYMLINK+="serial1" GROUP="tty" MODE="0666"
         state: present
+
+    - name: Stop wpa wifi service
+      ansible.builtin.systemd_service:
+        name: wpa_supplicant
+        state: stopped
+        enabled: false
 
     - name: Create a working directory if it does not exist
       ansible.builtin.file:

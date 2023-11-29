@@ -2,7 +2,7 @@
 FROM alpine:edge
 
 # install hostapd
-RUN apk --no-cache add hostapd=2.10-r6 iw iptables && rm -rf /var/cache/apk/*
+RUN apk --no-cache add hostapd iw iptables && rm -rf /var/cache/apk/*
 
 ENV AP_IP_ADDRESS=10.100.107.1
 
@@ -17,4 +17,4 @@ RUN chmod +x /usr/sbin/hostapd-entrypoint.sh
 
 ENTRYPOINT [ "/usr/sbin/hostapd-entrypoint.sh" ]
 
-CMD ["/usr/sbin/hostapd","/hostapd.conf"]
+CMD ["/usr/sbin/hostapd","-dd","/hostapd.conf"]
