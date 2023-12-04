@@ -17,4 +17,4 @@ RUN chmod +x /usr/sbin/hostapd-entrypoint.sh
 
 ENTRYPOINT [ "/usr/sbin/hostapd-entrypoint.sh" ]
 
-CMD ["/usr/sbin/hostapd","-dd","/hostapd.conf"]
+# CMD ["/usr/sbin/hostapd","-dd","/hostapd.conf"]

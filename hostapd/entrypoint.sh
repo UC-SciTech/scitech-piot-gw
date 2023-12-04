@@ -27,32 +27,34 @@ cleanup () {
   echo -e "${GREEN}[+] Successfully exited, byebye! ${NOCOLOR}"
 }
 
-trap 'sigterm_handler' TERM INT
-echo -e "${CYAN}[*] Setting wifi region to AU${NOCOLOR}"
-iw --debug reg set AU
-
-echo -e "${CYAN}[*] Creating iptables rules${NOCOLOR}"
-sh /iptables.sh || echo -e "${RED}[-] Error creating iptables rules${NOCOLOR}"
-
-echo -e "${CYAN}[*] Setting wlan0 settings${NOCOLOR}"
-ip link set wlan0 up
-ip addr flush dev wlan0
-ip addr add ${AP_IP_ADDRESS}/24 dev wlan0
-
-echo -e "${CYAN}[+] Configuration successful! Services will start now${NOCOLOR}"
-
 set -eo pipefail
 [[ "$TRACE" ]] && set -x
 if [[ "$1" == "" ]]; then
+    trap 'sigterm_handler' TERM INT
+    echo -e "${CYAN}[*] Setting wifi region to AU${NOCOLOR}"
+    iw --debug reg set AU
+
+    echo -e "${CYAN}[*] Creating iptables rules${NOCOLOR}"
+    sh /iptables.sh || echo -e "${RED}[-] Error creating iptables rules${NOCOLOR}"
+
+    echo -e "${CYAN}[*] Setting wlan0 settings${NOCOLOR}"
+    ip link set wlan0 up
+    ip addr flush dev wlan0
+    ip addr add ${AP_IP_ADDRESS}/24 dev wlan0
+
+    echo -e "${CYAN}[+] Configuration successful! Services will start soon${NOCOLOR}"
+
+    # start hostapd
+    echo -e "${CYAN}[*] Starting hostapd...${NOCOLOR}"
     hostapd -dd /hostapd.conf &
 
-    # wait for the command script to finish
+    # wait for the command to finish
     wait $!
+
+    # cleanup
+    cleanup
 else
     # release to script to the command script
     # exec "$@"
     $@
 fi
-
-# cleanup
-cleanup
