@@ -71,6 +71,7 @@ services:
     environment:
       MODEL: "SX1302"
       TC_KEY: "${TC_KEY}"
+      TTS_REGION: au1
     restart: unless-stopped
 
   # mosquitto MQTT broker

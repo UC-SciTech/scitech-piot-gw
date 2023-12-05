@@ -55,6 +55,6 @@ if [[ "$1" == "" ]]; then
     cleanup
 else
     # release to script to the command script
-    # exec "$@"
-    $@
+    # $@
+    exec "$@"
 fi
