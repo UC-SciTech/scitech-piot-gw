@@ -24,7 +24,8 @@ The Waveshare product wiki can be found [here](<https://www.waveshare.com/wiki/S
 
 ### Services
 
-1. pi-hole ad blocker and DHCP server
+1. pi-hole - ad blocker and DNS/DHCP server
+1. hostapd - wireless access point
 1. emqx - mqtt broker
 1. influxdb & telegraph - time series database and ingress from mqtt
 1. homeassistant - home automation platform
