@@ -162,21 +162,6 @@ services:
       - './env/nodered:/data'
     restart: unless-stopped
 
-  # heimdall homepage to keep track of all the services
-  # heimdall:
-  #   container_name: heimdall
-  #   image: lscr.io/linuxserver/heimdall:latest
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     - TZ=Sydney/Australia
-  #   ports:
-  #     # - '8080:80'
-  #     - '8443:443'
-  #   volumes:
-  #     - './env/heimdall:/config'
-  #   restart: unless-stopped
-
   # homer homepage to keep track of all the services
   homer:
     container_name: homer

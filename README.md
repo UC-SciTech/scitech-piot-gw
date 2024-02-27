@@ -1,5 +1,8 @@
 # scitech-piot-gw
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Open in Visual Studio Code](https://img.shields.io/badge/vscode-dev-blue)](https://open.vscode.dev/UC-SciTech/scitech-piot-gw)
+
 Raspberry Pi based IoT gateway with Waveshare SX130x 868M/915M LoRaWAN Gateway Module.
 
 ## Hardware
