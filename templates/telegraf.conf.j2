@@ -10,8 +10,8 @@ bucket = "{{INFLUXDB_BUCKET}}"
 servers = ["tcp://emqx:1883"]
 
 topics = [
-    "sensors/#",
-    "actuators/#"
+    "/piot-home/sensor/#",
+    "/piot-home/actuator/#"
   ]
 
 data_format = "json_v2"
@@ -19,8 +19,7 @@ data_format = "json_v2"
 # json_v2
 [[inputs.mqtt_consumer.json_v2]]
   [[inputs.mqtt_consumer.json_v2.object]]
-    timestamp_path = "time"
+    timestamp_key = "time"
     timestamp_format = "unix_ms"
-    [[inputs.mqtt_consumer.json_v2.object]]
-        path = "measurements"
-        tags = ["name", "units"]
+    path = "measurements"
+    tags = ["name", "units"]

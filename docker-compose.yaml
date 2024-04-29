@@ -69,9 +69,16 @@ services:
     privileged: true
     network_mode: host # required to read main interface MAC instead of virtual one
     environment:
-      MODEL: "SX1302"
+      MODEL: "SX1303"
       TC_KEY: "${TC_KEY}"
       TTS_REGION: au1
+      USE_LIBGPIOD: 1
+      RESET_GPIO: 23
+      # GW_RESET_GPIO: 23
+      # GW_RESET_PIN: 23
+      # RESET_PIN: 23
+      POWER_EN_GPIO: 18
+      # GW_POWER_EN_GPIO: 18
     restart: unless-stopped
 
   # mosquitto MQTT broker
@@ -100,6 +107,11 @@ services:
       - './env/emqx/etc/emqx.conf:/opt/emqx/etc/emqx.conf'
       - './env/emqx/data:/opt/emqx/data'
       # - './env/emqx/log:/opt/emqx/log'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18083/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     restart: unless-stopped
 
   # InfluxDB time series database from the TICK stack
@@ -117,6 +129,11 @@ services:
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_ADMIN_TOKEN}
     volumes:
       - './env/influxdb:/var/lib/influxdb2'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     restart: unless-stopped
 
   # telegraf collector for influxdb
@@ -126,8 +143,10 @@ services:
     volumes:
       - './env/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro'
     depends_on:
-      - influxdb
-      - emqx
+      influxdb:
+        condition: service_healthy
+      emqx:
+        condition: service_healthy
     restart: unless-stopped
 
   # home-assistant home automation platform
@@ -160,6 +179,8 @@ services:
       - '1880:1880'
     volumes:
       - './env/nodered:/data'
+    depends_on:
+      - telegraf
     restart: unless-stopped
 
   # homer homepage to keep track of all the services

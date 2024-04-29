@@ -157,6 +157,12 @@
         enabled: false
         masked: true
 
+    - name: Enable SPI
+      ansible.builtin.lineinfile:
+        path: /boot/firmware/config.txt
+        line: dtparam=spi=on
+        state: present
+
     - name: Disable hciuart service
       ansible.builtin.systemd_service:
         name: hciuart

@@ -1,0 +1,271 @@
+[
+    {
+        "id": "9a835bb06d0a5d58",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "1cac3a4de691a55e",
+        "type": "mqtt in",
+        "z": "9a835bb06d0a5d58",
+        "name": "",
+        "topic": "/test/hello",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ac39a78602d3c6ac",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 940,
+        "y": 520,
+        "wires": [
+            [
+                "6e4491ea3649975d",
+                "0a40323b41fdaad0",
+                "b9ffe423ed99427a"
+            ]
+        ]
+    },
+    {
+        "id": "5eb993c73dc492c8",
+        "type": "mqtt out",
+        "z": "9a835bb06d0a5d58",
+        "name": "",
+        "topic": "/test/hello",
+        "qos": "2",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ac39a78602d3c6ac",
+        "x": 300,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "ad73531f9515d03a",
+        "type": "inject",
+        "z": "9a835bb06d0a5d58",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "hello",
+        "payloadType": "str",
+        "x": 130,
+        "y": 180,
+        "wires": [
+            [
+                "5eb993c73dc492c8"
+            ]
+        ]
+    },
+    {
+        "id": "6e4491ea3649975d",
+        "type": "debug",
+        "z": "9a835bb06d0a5d58",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1140,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "0a40323b41fdaad0",
+        "type": "template",
+        "z": "9a835bb06d0a5d58",
+        "name": "",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "This is the payload: {{payload}} !",
+        "output": "str",
+        "x": 1140,
+        "y": 480,
+        "wires": [
+            [
+                "f342a710b539b2b1"
+            ]
+        ]
+    },
+    {
+        "id": "7941e30e997125b5",
+        "type": "uibuilder",
+        "z": "9a835bb06d0a5d58",
+        "name": "Dynamic web page",
+        "topic": "",
+        "url": "ui",
+        "okToGo": true,
+        "fwdInMessages": false,
+        "allowScripts": false,
+        "allowStyles": false,
+        "copyIndex": true,
+        "templateFolder": "blank",
+        "extTemplate": "",
+        "showfolder": false,
+        "reload": false,
+        "sourceFolder": "src",
+        "deployedVersion": "6.8.2",
+        "showMsgUib": false,
+        "title": "",
+        "descr": "",
+        "x": 1610,
+        "y": 440,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "f342a710b539b2b1",
+        "type": "uib-element",
+        "z": "9a835bb06d0a5d58",
+        "name": "",
+        "topic": "",
+        "elementtype": "html",
+        "parent": "body",
+        "parentSource": "",
+        "parentSourceType": "str",
+        "elementid": "",
+        "elementId": "",
+        "elementIdSourceType": "str",
+        "heading": "",
+        "headingSourceType": "str",
+        "headingLevel": "h2",
+        "data": "payload",
+        "dataSourceType": "msg",
+        "position": "last",
+        "positionSourceType": "str",
+        "passthrough": false,
+        "confData": {},
+        "x": 1330,
+        "y": 480,
+        "wires": [
+            [
+                "7941e30e997125b5"
+            ]
+        ]
+    },
+    {
+        "id": "b9ffe423ed99427a",
+        "type": "uib-element",
+        "z": "9a835bb06d0a5d58",
+        "name": "",
+        "topic": "",
+        "elementtype": "title",
+        "parent": "body",
+        "parentSource": "",
+        "parentSourceType": "str",
+        "elementid": "",
+        "elementId": "",
+        "elementIdSourceType": "str",
+        "heading": "",
+        "headingSourceType": "str",
+        "headingLevel": "h2",
+        "data": "Simple IoT Dashboard",
+        "dataSourceType": "str",
+        "position": "last",
+        "positionSourceType": "str",
+        "passthrough": false,
+        "confData": {},
+        "x": 1180,
+        "y": 440,
+        "wires": [
+            [
+                "7941e30e997125b5"
+            ]
+        ]
+    },
+    {
+        "id": "f9da2d7ae584ef81",
+        "type": "comment",
+        "z": "9a835bb06d0a5d58",
+        "name": "This part sends a message using MQTT",
+        "info": "",
+        "x": 270,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "f3c4980dc0f1c5f7",
+        "type": "comment",
+        "z": "9a835bb06d0a5d58",
+        "name": "Receive message on the same topic",
+        "info": "",
+        "x": 720,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "5cd612347ea976ff",
+        "type": "comment",
+        "z": "9a835bb06d0a5d58",
+        "name": "Build a html response to update the web page",
+        "info": "",
+        "x": 1170,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "14945be43e6de94e",
+        "type": "comment",
+        "z": "9a835bb06d0a5d58",
+        "name": "Serve the web page",
+        "info": "",
+        "x": 1690,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "ac39a78602d3c6ac",
+        "type": "mqtt-broker",
+        "name": "piot",
+        "broker": "10.100.107.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
